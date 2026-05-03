@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>APEX — Fitness Tracker</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css"> 
+</head>
+
+<body>
+
+  <div class="mob-bar">
+    <div class="mob-logo">APEX</div>
+    <button class="mob-btn" onclick="toggleSb()">☰</button>
+  </div>
+  <div class="overlay" id="overlay" onclick="toggleSb()"></div>
+
+  <div class="app">
+    <aside class="sb" id="sb">
+      <div class="logo">
+        \
+        <div class="logo-box">A</div>
+        <div class="logo-txt">APEX</div>
+      </div>
+
+      <div class="nav-grp">
+        <div class="nav-lbl">Main</div>
+        <div class="ni on" onclick="go('dash',this)"><span class="ni-ico">📊</span>Dashboard</div>
+        <div class="ni" onclick="go('workout',this)"><span class="ni-ico">🏋️</span>Workout</div>
+        <div class="ni" onclick="go('nutrition',this)"><span class="ni-ico">🥗</span>Nutrition</div>
+        <div class="ni" onclick="go('progress',this)"><span class="ni-ico">📈</span>Progress</div>
+        <div class="ni" onclick="go('coach',this)"><span class="ni-ico">🤖</span>Coach</div>
+      </div>
+      <div class="nav-grp">
+        <div class="nav-lbl">Info</div>
+        <div class="ni" onclick="go('about',this)"><span class="ni-ico">ℹ️</span>About Us</div>
+        <div class="ni" onclick="go('contact',this)"><span class="ni-ico">✉️</span>Contact</div>
+        <div class="ni" onclick="go('feedback',this)"><span class="ni-ico">💬</span>Feedback</div>
+      </div>
+
+      <div class="sb-footer">
+        <!-- Visitor Counter -->
+        <div class="vis-box">
+          <div class="vis-dot"></div>
+          <div style="flex:1;font-size:.72rem;">Total Visitors</div>
+          <div class="vis-num" id="visCount">—</div>
+        </div>
+        <!-- Streak -->
+        <div class="streak-box">
+          <div>🔥</div>
+          <div>
+            <div class="streak-num" id="streakNum">0</div>
+            <div class="streak-info"><strong>day streak</strong>Keep going!</div>
+          </div>
+        </div>
+        <!-- User ID tag -->
+        <div class="user-tag">👤 Your ID: <span id="userIdTag">...</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <!-- ═══════ DASHBOARD ═══════ -->
+      <div class="page on" id="pg-dash">
+        <div class="pg-title">Good day, <em>Athlete</em> 💪</div>
+        <div class="pg-sub" id="dashDate"></div>
+        <div class="stats4">
+          <div class="sc">
+            <div class="sc-lbl">Calories Burned</div>
+            <div class="sc-val" id="sc-cal">0<span class="u"> kcal</span></div>
+            <div class="sc-note" id="sc-cal-n">Start training!</div>
+          </div>
+          <div class="sc">
+            <div class="sc-lbl">Workouts</div>
+            <div class="sc-val" id="sc-wo">0<span class="u"> today</span></div>
+            <div class="sc-note" id="sc-wo-n">No workouts yet</div>
+          </div>
+          <div class="sc">
+            <div class="sc-lbl">Protein</div>
+            <div class="sc-val" id="sc-prot">0<span class="u"> g</span></div>
+            <div class="sc-note" id="sc-prot-n">150g to goal</div>
+          </div>
+          <div class="sc">
+            <div class="sc-lbl">Body Weight</div>
+            <div class="sc-val" id="sc-bw">--<span class="u"> kg</span></div>
+            <div class="sc-note">Log your weight →</div>
+          </div>
+        </div>
+        <div class="dash2">
+          <div class="card">
+            <div class="sec-hd">
+              <div class="sec-title">Weekly Activity</div><span class="badge" id="weekTotal">0 kcal</span>
+            </div>
+            <div class="bars" id="weekBars"></div>
+            <div class="day-row">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="sec-title" style="margin-bottom:.75rem;">Macros Today</div>
+            <div style="display:flex;justify-content:center;"><svg id="macroRing" width="110" height="110"
+                viewBox="0 0 110 110"></svg></div>
+            <div id="ringLabels" style="margin-top:.75rem;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ WORKOUT ═══════ -->
+      <div class="page" id="pg-workout">
+        <div class="pg-title">Workout <em>Log</em></div>
+        <div class="pg-sub">Track exercises, sets, reps and weights</div>
+        <div class="wg">
+          <div class="card">
+            <div class="sec-title" style="margin-bottom:1rem;">Add Exercise</div>
+            <input class="inp" id="exName" placeholder="Exercise name (e.g. Bench Press)" list="exL"
+              style="margin-bottom:.7rem;">
+            <datalist id="exL">
+              <option value="Bench Press">
+              <option value="Squat">
+              <option value="Deadlift">
+              <option value="Pull-Up">
+              <option value="Push-Up">
+              <option value="Shoulder Press">
+              <option value="Barbell Row">
+              <option value="Running">
+              <option value="Cycling">
+              <option value="Plank">
+            </datalist>
+            <div class="g2" style="margin-bottom:.7rem;">
+              <div><label class="lbl">Sets</label><input class="inp" id="exSets" type="number" placeholder="3" min="1">
+              </div>
+              <div><label class="lbl">Reps</label><input class="inp" id="exReps" type="number" placeholder="10" min="1">
+              </div>
+            </div>
+            <div class="g2" style="margin-bottom:.7rem;">
+              <div><label class="lbl">Weight (kg)</label><input class="inp" id="exWt" type="number" placeholder="60"
+                  min="0" step=".5"></div>
+              <div><label class="lbl">Category</label><select class="inp" id="exCat">
+                  <option>💪 Strength</option>
+                  <option>🏃 Cardio</option>
+                  <option>🧘 Flexibility</option>
+                  <option>⚡ HIIT</option>
+                </select></div>
+            </div>
+            <button class="btn" onclick="addEx()" style="width:100%;justify-content:center;">＋ Add Exercise</button>
+          </div>
+          <div class="card">
+            <div class="sec-hd">
+              <div class="sec-title">Today's Log</div><span class="badge" id="calBurn">0 kcal</span>
+            </div>
+            <div id="exList">
+              <div style="color:var(--mut);font-size:.84rem;text-align:center;padding:2rem 0;opacity:.6;">No exercises
+                logged yet 🏋️</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-title" style="margin-bottom:.875rem;">Personal Records 🏆</div>
+          <div id="prGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.7rem;">
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ NUTRITION ═══════ -->
+      <div class="page" id="pg-nutrition">
+        <div class="pg-title">Nutrition <em>Tracker</em></div>
+        <div class="pg-sub">Type any food naturally — macros calculated instantly from built-in database <span class="api-badge">⚡ Instant</span></div>
+
+
+
+        <div class="nut5">
+          <div class="nc">
+            <div class="nc-ico">🔥</div>
+            <div class="nc-v" id="nutCal" style="color:var(--amb);">0</div>
+            <div class="nc-l">Calories</div>
+          </div>
+          <div class="nc">
+            <div class="nc-ico">🥩</div>
+            <div class="nc-v" id="nutProt" style="color:var(--grn);">0g</div>
+            <div class="nc-l">Protein</div>
+          </div>
+          <div class="nc">
+            <div class="nc-ico">🍞</div>
+            <div class="nc-v" id="nutCarb" style="color:var(--ora);">0g</div>
+            <div class="nc-l">Carbs</div>
+          </div>
+          <div class="nc">
+            <div class="nc-ico">🥑</div>
+            <div class="nc-v" id="nutFat" style="color:var(--amb);">0g</div>
+            <div class="nc-l">Fat</div>
+          </div>
+          <div class="nc" style="cursor:pointer;" onclick="addWater()">
+            <div class="nc-ico">💧</div>
+            <div class="nc-v" id="nutWater" style="color:#38bdf8;">0L</div>
+            <div class="nc-l">Water (+250ml)</div>
+          </div>
+        </div>
+
+        <div class="ng2">
+          <div class="card">
+            <div class="sec-hd">
+              <div class="sec-title">Log Meal</div><span class="badge" id="nutApiStatus">No key set</span>
+            </div>
+
+            <!-- Food search (uses API) -->
+            <div class="food-search-box">
+              <label class="lbl">Search food (e.g. "2 eggs", "1 cup rice", "chicken sandwich")</label>
+              <div style="display:flex;gap:.5rem;">
+                <input class="inp" id="foodQuery" placeholder="Type any food or dish…"
+                  onkeydown="if(event.key==='Enter')searchFood()" style="flex:1;">
+                <button class="btn" id="searchBtn" onclick="searchFood()" style="white-space:nowrap;">🔍 Search</button>
+              </div>
+              <div class="food-results" id="foodResults"></div>
+            </div>
+
+            <div style="font-size:.72rem;color:var(--mut);margin:.5rem 0 .875rem;">— or fill manually —</div>
+
+            <input class="inp" id="mealName" placeholder="Meal name" style="margin-bottom:.7rem;" list="mealL">
+            <datalist id="mealL">
+              <option value="Chicken & Rice">
+              <option value="Oatmeal">
+              <option value="Protein Shake">
+              <option value="Eggs & Toast">
+              <option value="Salad">
+            </datalist>
+            <div class="g2" style="margin-bottom:.7rem;">
+              <div><label class="lbl">Calories</label><input class="inp" id="mealCal" type="number" placeholder="350">
+              </div>
+              <div><label class="lbl">Protein (g)</label><input class="inp" id="mealProt" type="number"
+                  placeholder="30"></div>
+            </div>
+            <div class="g2" style="margin-bottom:.7rem;">
+              <div><label class="lbl">Carbs (g)</label><input class="inp" id="mealCarb" type="number" placeholder="40">
+              </div>
+              <div><label class="lbl">Fat (g)</label><input class="inp" id="mealFat" type="number" placeholder="8">
+              </div>
+            </div>
+            <button class="btn" onclick="addMeal()" style="width:100%;justify-content:center;">＋ Log Meal</button>
+          </div>
+
+          <div class="card">
+            <div class="sec-hd">
+              <div class="sec-title">Today's Meals</div><span class="badge" id="mealCount">0 meals</span>
+            </div>
+            <div id="mealList">
+              <div style="color:var(--mut);font-size:.84rem;opacity:.6;text-align:center;padding:1.5rem 0;">No meals
+                logged 🥗</div>
+            </div>
+            <div style="margin-top:1rem;">
+              <div
+                style="font-size:.72rem;color:var(--mut);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.65rem;">
+                Macro Balance</div>
+              <div id="macroBars"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ PROGRESS ═══════ -->
+      <div class="page" id="pg-progress">
+        <div class="pg-title">Your <em>Progress</em></div>
+        <div class="pg-sub">Body weight trends and personal bests</div>
+        <div class="pg2">
+          <div class="card">
+            <div class="sec-hd">
+              <div class="sec-title">Body Weight</div><span class="badge" id="bwBadge">-- kg</span>
+            </div>
+            <svg id="wSvg" viewBox="0 0 360 120" style="width:100%;height:120px;" preserveAspectRatio="none"></svg>
+            <div style="display:flex;gap:.7rem;margin-top:.7rem;">
+              <input class="inp" id="bwInp" type="number" placeholder="Today's weight (kg)" step=".1" min="30" max="300"
+                style="flex:1;">
+              <button class="btn" onclick="logW()">Log</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="sec-title" style="margin-bottom:.875rem;">Personal Bests</div>
+            <div id="pbList">
+              <div style="color:var(--mut);font-size:.84rem;opacity:.6;">Log workouts to set records 🏆</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-hd">
+            <div class="sec-title">Session History</div><span class="badge" id="totalSess">0 sessions</span>
+          </div>
+          <div id="sessGrid"
+            style="display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:.7rem;margin-top:.5rem;">
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ COACH ═══════ -->
+      <div class="page" id="pg-coach">
+        <div class="pg-title">APEX <em>Coach</em></div>
+        <div class="pg-sub">Smart guidance based on your logged data</div>
+        <div class="coach-wrap">
+          <div class="chat-box">
+            <div class="chat-hd">
+              <div class="ai-av">🤖</div>
+              <div>
+                <div class="ai-nm">APEX Coach</div>
+                <div class="ai-st">Ready to help</div>
+              </div>
+            </div>
+            <div class="chat-msgs" id="chatMsgs">
+              <div class="msg a">
+                <div class="bub">Hey! I'm your APEX Coach 💪 Ask me anything about your workouts, nutrition, progress,
+                  or motivation. I use your real data!</div>
+                <div class="msg-t">Just now</div>
+              </div>
+            </div>
+            <div class="qps">
+              <button class="qp" onclick="ask('Give me a workout plan for today')">📋 Today's plan</button>
+              <button class="qp" onclick="ask('How is my nutrition today?')">🥗 Nutrition check</button>
+              <button class="qp" onclick="ask('How can I improve my progress?')">📈 Tips</button>
+              <button class="qp" onclick="ask('Motivate me!')">🔥 Motivate me</button>
+              <button class="qp" onclick="ask('Am I drinking enough water?')">💧 Water check</button>
+              <button class="qp" onclick="ask('What is my strongest exercise?')">🏆 Strongest lift</button>
+            </div>
+            <div class="chat-inp-row">
+              <input id="chatInp" placeholder="Ask your coach…" onkeydown="if(event.key==='Enter')ask()">
+              <button class="send-btn" onclick="ask()">➤</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div class="tip-card">
+              <div class="tip-lbl">💡 Daily Tip</div>
+              <div class="tip-txt" id="dailyTip">Loading…</div>
+            </div>
+            <div class="card">
+              <div
+                style="font-size:.65rem;letter-spacing:.15em;color:var(--mut);text-transform:uppercase;margin-bottom:.75rem;">
+                Today's Checklist</div>
+              <div id="checks"></div>
+            </div>
+            <div class="card-sm">
+              <div
+                style="font-size:.65rem;letter-spacing:.15em;color:var(--mut);text-transform:uppercase;margin-bottom:.55rem;">
+                Quick Stats</div>
+              <div id="quickStats" style="font-size:.77rem;color:var(--mut);line-height:2.1;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ ABOUT ═══════ -->
+      <div class="page" id="pg-about">
+        <div class="ah">
+          <div class="ah-tag">🚀 Chitkara University · BE 2025</div>
+          <div class="ah-title">Train Smarter,<br><em>Achieve More</em></div>
+          <div class="ah-sub">APEX is a complete fitness tracking platform combining workout logging, smart nutrition
+            analysis powered by real food APIs, body weight monitoring, and an intelligent coach.</div>
+        </div>
+        <div class="ab2">
+          <div class="card">
+            <div style="font-size:1.8rem;margin-bottom:.7rem;">🎯</div>
+            <div class="sec-title" style="margin-bottom:.65rem;">Our Objective</div>
+            <p style="font-size:.84rem;color:var(--mut);line-height:1.75;">APEX was built to make elite fitness tracking
+              accessible to everyone. By keeping workouts, nutrition, and insights in one place, you identify patterns,
+              break plateaus, and hit goals faster — without needing a personal trainer.</p>
+          </div>
+          <div class="card">
+            <div style="font-size:1.8rem;margin-bottom:.7rem;">⚡</div>
+            <div class="sec-title" style="margin-bottom:.65rem;">What Makes APEX Different</div>
+            <div style="display:flex;flex-direction:column;gap:.6rem;">
+              <div style="display:flex;gap:.7rem;font-size:.81rem;color:var(--mut);align-items:flex-start;">
+                <div
+                  style="width:7px;height:7px;border-radius:50%;background:var(--ora);margin-top:.38rem;flex-shrink:0;">
+                </div>
+                <div><strong style="color:var(--txt);">AI Nutrition Engine</strong> — Type "2 eggs and toast" and macros auto-fill instantly via Claude AI.</div>
+              </div>
+              <div style="display:flex;gap:.7rem;font-size:.81rem;color:var(--mut);align-items:flex-start;">
+                <div
+                  style="width:7px;height:7px;border-radius:50%;background:var(--ora);margin-top:.38rem;flex-shrink:0;">
+                </div>
+                <div><strong style="color:var(--txt);">Per-User Data</strong> — Each user has isolated data via a unique
+                  browser ID.</div>
+              </div>
+              <div style="display:flex;gap:.7rem;font-size:.81rem;color:var(--mut);align-items:flex-start;">
+                <div
+                  style="width:7px;height:7px;border-radius:50%;background:var(--ora);margin-top:.38rem;flex-shrink:0;">
+                </div>
+                <div><strong style="color:var(--txt);">Live Visitor Count</strong> — Real-time global visitor counter
+                  via CounterAPI.</div>
+              </div>
+              <div style="display:flex;gap:.7rem;font-size:.81rem;color:var(--mut);align-items:flex-start;">
+                <div
+                  style="width:7px;height:7px;border-radius:50%;background:var(--ora);margin-top:.38rem;flex-shrink:0;">
+                </div>
+                <div><strong style="color:var(--txt);">Privacy First</strong> — No account, no signup. All data stays in
+                  your browser.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sec-title" style="margin-bottom:.9rem;">Core Features</div>
+        <div class="feat6">
+          <div class="fc">
+            <div class="fc-ico">📊</div>
+            <div class="fc-ttl">Smart Dashboard</div>
+            <div class="fc-dsc">Live stats for calories, workouts, protein, and body weight updated as you log.</div>
+          </div>
+          <div class="fc">
+            <div class="fc-ico">🏋️</div>
+            <div class="fc-ttl">Workout Logger</div>
+            <div class="fc-dsc">Log any exercise with sets, reps, weight. Auto-estimates calories, tracks PRs.</div>
+          </div>
+          <div class="fc">
+            <div class="fc-ico">🥗</div>
+            <div class="fc-ttl">Auto-Nutrition</div>
+            <div class="fc-dsc">Powered by Claude AI — type natural language and get instant macro breakdowns.</div>
+          </div>
+          <div class="fc">
+            <div class="fc-ico">📈</div>
+            <div class="fc-ttl">Progress Analytics</div>
+            <div class="fc-dsc">Weight trend chart, personal best leaderboard, and session history.</div>
+          </div>
+          <div class="fc">
+            <div class="fc-ico">🤖</div>
+            <div class="fc-ttl">Smart Coach</div>
+            <div class="fc-dsc">Rule-based coach that reads your real data and gives personalised advice.</div>
+          </div>
+          <div class="fc">
+            <div class="fc-ico">👥</div>
+            <div class="fc-ttl">Visitor Counter</div>
+            <div class="fc-dsc">Real-time global visit count via CounterAPI. Each user gets isolated data.</div>
+          </div>
+        </div>
+        <div class="sec-title" style="margin-bottom:.9rem;">The Team</div>
+        <div class="team2">
+          <div class="tc">
+            <div class="tc-av" style="background:var(--ora);">L</div>
+            <div class="tc-nm">Lakshay</div>
+            <div class="tc-role">Developer · Co-Founder</div>
+            <div class="tc-desc">Chitkara University, BE 2025. UI architecture, API integration, and core tracking.
+            </div>
+          </div>
+          <div class="tc">
+            <div class="tc-av" style="background:var(--blu);">K</div>
+            <div class="tc-nm">Keshav</div>
+            <div class="tc-role">Developer · Co-Founder</div>
+            <div class="tc-desc">Chitkara University, BE 2025. Nutrition engine, progress analytics, and data layer.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ CONTACT ═══════ -->
+      <div class="page" id="pg-contact">
+        <div class="pg-title">Contact <em>Us</em></div>
+        <div class="pg-sub">Questions, bugs, or ideas — we'd love to hear from you</div>
+        <div class="cg">
+          <div class="card">
+            <div class="sec-title" style="margin-bottom:1rem;">Reach Out Directly</div>
+            <div class="cperson">
+              <div class="c-av" style="background:var(--ora);">L</div>
+              <div style="flex:1;">
+                <div class="c-nm">Lakshay</div>
+                <div class="c-role">Developer & Co-Founder</div><a class="c-mail"
+                  href="mailto:lakshay1143.be25@chitkarauniversity.edu.in">lakshay1143.be25@chitkarauniversity.edu.in</a>
+              </div>
+              <a class="btn" href="mailto:lakshay1143.be25@chitkarauniversity.edu.in"
+                style="text-decoration:none;font-size:.78rem;padding:.55rem 1rem;">✉ Email</a>
+            </div>
+            <div class="cperson">
+              <div class="c-av" style="background:var(--blu);">K</div>
+              <div style="flex:1;">
+                <div class="c-nm">Keshav</div>
+                <div class="c-role">Developer & Co-Founder</div><a class="c-mail"
+                  href="mailto:keshav1130.be25@chitkarauniversity.edu.in">keshav1130.be25@chitkarauniversity.edu.in</a>
+              </div>
+              <a class="btn" href="mailto:keshav1130.be25@chitkarauniversity.edu.in"
+                style="text-decoration:none;font-size:.78rem;padding:.55rem 1rem;">✉ Email</a>
+            </div>
+          </div>
+          <div>
+            <div class="ci-row">
+              <div class="ci-ico">🏫</div>
+              <div>
+                <div class="ci-lbl">Institution</div>
+                <div class="ci-val">Chitkara University</div>
+                <div class="ci-sub">Bachelor of Engineering, Batch 2025</div>
+              </div>
+            </div>
+            <div class="ci-row">
+              <div class="ci-ico">⏱️</div>
+              <div>
+                <div class="ci-lbl">Response Time</div>
+                <div class="ci-val">Within 24 hours</div>
+                <div class="ci-sub">We respond to every message personally</div>
+              </div>
+            </div>
+            <div class="ci-row">
+              <div class="ci-ico">🐛</div>
+              <div>
+                <div class="ci-lbl">Found a Bug?</div>
+                <div class="ci-val">Report It</div>
+                <div class="ci-sub">Email us with a description</div>
+              </div>
+            </div>
+            <div class="ci-row">
+              <div class="ci-ico">💡</div>
+              <div>
+                <div class="ci-lbl">Feature Request</div>
+                <div class="ci-val">We're Listening</div>
+                <div class="ci-sub">Your ideas shape APEX's roadmap</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ FEEDBACK ═══════ -->
+      <div class="page" id="pg-feedback">
+        <div class="pg-title">Your <em>Feedback</em></div>
+        <div class="pg-sub">Every opinion helps us improve APEX</div>
+        <div class="fbl">
+          <div class="card" style="flex:1;">
+            <div class="sec-title" style="margin-bottom:1rem;">Share Your Experience</div>
+            <label class="lbl" style="letter-spacing:.12em;text-transform:uppercase;">Rating</label>
+            <div class="stars" id="starRow"><span class="star" onclick="rate(1)" data-v="1">★</span><span class="star"
+                onclick="rate(2)" data-v="2">★</span><span class="star" onclick="rate(3)" data-v="3">★</span><span
+                class="star" onclick="rate(4)" data-v="4">★</span><span class="star" onclick="rate(5)"
+                data-v="5">★</span></div>
+            <div class="s-lbl" id="rateLbl">Click to rate</div>
+            <div style="height:.875rem;"></div>
+            <label class="lbl" style="letter-spacing:.12em;text-transform:uppercase;">Category</label>
+            <div class="chips" id="catChips">
+              <div class="chip on" onclick="pickCat(this,'General')">💬 General</div>
+              <div class="chip" onclick="pickCat(this,'Bug')">🐛 Bug</div>
+              <div class="chip" onclick="pickCat(this,'Feature')">💡 Feature</div>
+              <div class="chip" onclick="pickCat(this,'UI/UX')">🎨 UI/UX</div>
+            </div>
+            <input class="inp" id="fbName" placeholder="Your name (optional)" style="margin-bottom:.7rem;">
+            <textarea class="inp" id="fbMsg" placeholder="Tell us what you think…"
+              style="height:110px;resize:vertical;margin-bottom:1rem;"></textarea>
+            <button class="btn" onclick="submitFb()" style="width:100%;justify-content:center;">🚀 Submit
+              Feedback</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1rem;width:265px;flex-shrink:0;">
+            <div class="card" style="background:var(--ora2);border-color:var(--ora3);">
+              <div
+                style="font-size:.62rem;letter-spacing:.18em;color:var(--ora);text-transform:uppercase;margin-bottom:.45rem;">
+                Why It Matters</div>
+              <p style="font-size:.82rem;line-height:1.7;color:var(--txt);">APEX is a student project built with real
+                passion. Your feedback shapes what gets built next.</p>
+            </div>
+            <div class="card">
+              <div
+                style="font-size:.65rem;letter-spacing:.15em;color:var(--mut);text-transform:uppercase;margin-bottom:.7rem;">
+                Recent Submissions</div>
+              <div id="fbLog">
+                <div style="color:var(--mut);font-size:.78rem;opacity:.7;">No submissions yet.</div>
+              </div>
+            </div>
+            <div class="card">
+              <div
+                style="font-size:.65rem;letter-spacing:.15em;color:var(--mut);text-transform:uppercase;margin-bottom:.7rem;">
+                Recommend APEX?</div>
+              <div style="display:flex;gap:.65rem;"><button class="btn"
+                  style="flex:1;justify-content:center;font-size:.8rem;" onclick="poll('y')">👍 Yes</button><button
+                  class="btn-ghost" style="flex:1;font-size:.8rem;" onclick="poll('n')">👎 No</button></div>
+              <div id="pollRes" style="margin-top:.55rem;font-size:.74rem;color:var(--mut);text-align:center;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="finalproject.js"></script>
+</body>
+
+                </html>
